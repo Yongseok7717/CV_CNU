@@ -1,41 +1,39 @@
-\documentclass[10pt, letterpaper]{article}
+\documentclass[10pt, a4paper]{article}
 
-% Packages:
+% ============================================================
+%  Packages
+% ============================================================
 \usepackage[
-    ignoreheadfoot, % set margins without considering header and footer
-    top=2 cm, % seperation between body and page edge from the top
-    bottom=2 cm, % seperation between body and page edge from the bottom
-    left=2 cm, % seperation between body and page edge from the left
-    right=2 cm, % seperation between body and page edge from the right
-    footskip=1.0 cm, % seperation between body and footer
-    % showframe % for debugging 
-]{geometry} % for adjusting page geometry
-\usepackage[explicit]{titlesec} % for customizing section titles
-\usepackage{tabularx} % for making tables with fixed width columns
-\usepackage{array} % tabularx requires this
-\usepackage[dvipsnames]{xcolor} % for coloring text
-\definecolor{primaryColor}{RGB}{0, 79, 144} % define primary color
-\usepackage{enumitem} % for customizing lists
-\usepackage{fontawesome5} % for using icons
-\usepackage{amsmath} % for math
+    ignoreheadfoot,
+    top=1.5cm, bottom=1.5cm,
+    left=1.6cm, right=1.6cm,
+    footskip=0.8cm,
+]{geometry}
+\usepackage[explicit]{titlesec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{primaryColor}{RGB}{0, 79, 144}
+\usepackage{enumitem}
+\usepackage{fontawesome5}
+\usepackage{amsmath}
 \usepackage[
-    pdftitle={Yongseok's CV},
+    pdftitle={Yongseok Jang -- CV},
     pdfauthor={Yongseok Jang},
-    pdfcreator={LaTeX with RenderCV},
     colorlinks=true,
-    urlcolor=primaryColor
-]{hyperref} % for links, metadata and bookmarks
-\usepackage[pscoord]{eso-pic} % for floating text on the page
-\usepackage{calc} % for calculating lengths
-\usepackage{bookmark} % for bookmarks
-\usepackage{lastpage} % for getting the total number of pages
-\usepackage{changepage} % for one column entries (adjustwidth environment)
-\usepackage{paracol} % for two and three column entries
-\usepackage{ifthen} % for conditional statements
-\usepackage{needspace} % for avoiding page brake right after the section title
-\usepackage{iftex} % check if engine is pdflatex, xetex or luatex
+    urlcolor=primaryColor,
+    linkcolor=primaryColor
+]{hyperref}
+\usepackage[pscoord]{eso-pic}
+\usepackage{calc}
+\usepackage{bookmark}
+\usepackage{lastpage}
+\usepackage{needspace}
+\usepackage{ifthen}
+\usepackage{iftex}
+\usepackage{etoolbox}
 
-% Ensure that generate pdf is machine readable/ATS parsable:
+% Machine-readable / ATS-parsable PDF
 \ifPDFTeX
     \input{glyphtounicode}
     \pdfgentounicode=1
@@ -43,808 +41,266 @@
     \usepackage[utf8]{inputenc}
     \usepackage{lmodern}
 \fi
+\usepackage[default, type1]{sourcesanspro}
 
-\usepackage[default, type1]{sourcesanspro} 
-
-% Some settings:
-\AtBeginEnvironment{adjustwidth}{\partopsep0pt} % remove space before adjustwidth environment
-\pagestyle{empty} % no header or footer
-\setcounter{secnumdepth}{0} % no section numbering
-\setlength{\parindent}{0pt} % no indentation
-\setlength{\topskip}{0pt} % no top skip
-\setlength{\columnsep}{0.15cm} % set column seperation
+% ============================================================
+%  Page style
+% ============================================================
+\setcounter{secnumdepth}{0}
+\setlength{\parindent}{0pt}
+\setlength{\topskip}{0pt}
 \makeatletter
-\let\ps@customFooterStyle\ps@plain % Copy the plain style to customFooterStyle
-\patchcmd{\ps@customFooterStyle}{\thepage}{
-    \color{gray}\textit{\small  Page \thepage{} of \pageref*{LastPage}}
-}{}{} % replace number by desired string
+\let\ps@customFooterStyle\ps@plain
+\patchcmd{\ps@customFooterStyle}{\thepage}{%
+    \color{gray}\textit{\small Page \thepage{} of \pageref*{LastPage}}%
+}{}{}
 \makeatother
 \pagestyle{customFooterStyle}
 
-\titleformat{\section}{
-    % avoid page braking right after the section title
-    \needspace{4\baselineskip}
-    % make the font size of the section title large and color it with the primary color
-    \Large\color{primaryColor}
-}{
-}{
-}{
-    % print bold title, give 0.15 cm space and draw a line of 0.8 pt thickness
-    % from the end of the title to the end of the body
-    \textbf{#1}\hspace{0.15cm}\titlerule[0.8pt]\hspace{-0.1cm}
-}[] % section title formatting
-
-\titlespacing{\section}{
-    % left space:
-    -1pt
-}{
-    % top space:
-    0.3 cm
-}{
-    % bottom space:
-    0.2 cm
-} % section title spacing
-
-% \renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$} % custom bullet points
-\newenvironment{highlights}{
-    \begin{itemize}[
-        topsep=0.10 cm,
-        parsep=0.10 cm,
-        partopsep=0pt,
-        itemsep=0pt,
-        leftmargin=0.4 cm + 10pt
-    ]
-}{
-    \end{itemize}
-} % new environment for highlights
-
-\newenvironment{highlightsforbulletentries}{
-    \begin{itemize}[
-        topsep=0.10 cm,
-        parsep=0.10 cm,
-        partopsep=0pt,
-        itemsep=0pt,
-        leftmargin=10pt
-    ]
-}{
-    \end{itemize}
-} % new environment for highlights for bullet entries
-
-
-\newenvironment{onecolentry}{
-    \begin{adjustwidth}{
-        0.2 cm + 0.00001 cm
-    }{
-        0.2 cm + 0.00001 cm
-    }
-}{
-    \end{adjustwidth}
-} % new environment for one column entries
-
-\newenvironment{twocolentry}[2][]{
-    \onecolentry
-    \def\secondColumn{#2}
-    \setcolumnwidth{\fill, 4.5 cm}
-    \begin{paracol}{2}
-}{
-    \switchcolumn \raggedleft \secondColumn
-    \end{paracol}
-    \endonecolentry
-} % new environment for two column entries
-
-\newenvironment{threecolentry}[3][]{
-    \onecolentry
-    \def\thirdColumn{#3}
-    \setcolumnwidth{1 cm, \fill, 4.5 cm}
-    \begin{paracol}{3}
-    {\raggedright #2} \switchcolumn
-}{
-    \switchcolumn \raggedleft \thirdColumn
-    \end{paracol}
-    \endonecolentry
-} % new environment for three column entries
-
-\newenvironment{header}{
-    \setlength{\topsep}{0pt}\par\kern\topsep\centering\color{primaryColor}\linespread{1.5}
-}{
-    \par\kern\topsep
-} % new environment for the header
-
-\newcommand{\placelastupdatedtext}{% \placetextbox{<horizontal pos>}{<vertical pos>}{<stuff>}
-  \AddToShipoutPictureFG*{% Add <stuff> to current page foreground
-    \put(
-        \LenToUnit{\paperwidth-2 cm-0.2 cm+0.05cm},
-        \LenToUnit{\paperheight-1.0 cm}
-    ){\vtop{{\null}\makebox[0pt][c]{
-        \small\color{gray}\textit{Last update: \today}\hspace{\widthof{Last update: \today}}
-    }}}%
-  }%
-}%
-
-% save the original href command in a new command:
-\let\hrefWithoutArrow\href
-
-% new command for external links:
-\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
-
-
-\begin{document}
-    \newcommand{\AND}{\unskip
-        \cleaders\copy\ANDbox\hskip\wd\ANDbox
-        \ignorespaces
-    }
-    \newsavebox\ANDbox
-    \sbox\ANDbox{}
-
-    \placelastupdatedtext
-    \begin{header}
-        \fontsize{30 pt}{30 pt}
-        \textbf{Yongseok JANG}
-
-        \vspace{0.3 cm}
-
-        \normalsize
-        \mbox{{\footnotesize\faMapMarker*}\hspace*{0.13cm}Chonnam National University}%
-        \kern 0.25 cm%
-        \AND%
-        \kern 0.25 cm%
-        \mbox{\hrefWithoutArrow{mailto:yongseok.jang@jnu.ac.kr}{{\footnotesize\faEnvelope[regular]}\hspace*{0.13cm}yongseok.jang@jnu.ac.kr}}%
-        \kern 0.25 cm%
-        % \AND%
-        % \kern 0.25 cm%
-        % \mbox{\hrefWithoutArrow{tel:+90-541-999-99-99}{{\footnotesize\faPhone*}\hspace*{0.13cm}0541 999 99 99}}%
-        % \kern 0.25 cm%
-        \AND%
-        \kern 0.25 cm%
-        \mbox{\hrefWithoutArrow{https://sites.google.com/view/yjang}{{\footnotesize\faLink}\hspace*{0.13cm}sites.google.com/view/yjang}}%
-        % \kern 0.25 cm%
-        % \AND%
-        % \kern 0.25 cm%
-        % \mbox{\hrefWithoutArrow{https://linkedin.com/in/yourusername}{{\footnotesize\faLinkedinIn}\hspace*{0.13cm}yourusername}}%
-        % \kern 0.25 cm%
-        % \AND%
-        % \kern 0.25 cm%
-        % \mbox{\hrefWithoutArrow{https://github.com/yourusername}{{\footnotesize\faGithub}\hspace*{0.13cm}yourusername}}%
-    \end{header}
-
-    \vspace{0.3 cm - 0.3 cm}
-
-
-    \section{Research Interests}
-
-
-    \begin{onecolentry}
-        \begin{highlightsforbulletentries}
-
-
-        \item Numerical methods for partial differential equations.
-        \item Computational continuum mechanics.
-        \item Numerical linear algebra.
-        \item Scientific computing and high performance of computing.
-
-
-        \end{highlightsforbulletentries}
-    \end{onecolentry}
-\section{Employment}
-\begin{twocolentry}{
-            Gwangju, South Korea
-
-        September 2025 – Present
-        }
-            \textbf{Chonnam National University, Department of Mathematics}, Assistant Professor
-            
-        \end{twocolentry}
-
-
-
-        
-        \begin{twocolentry}{
-            Paris, France
-
-        June 2024 – August 2025
-        }
-            \textbf{Sorbonne Universit\'e, LIP6}, Postdoctoral Research Fellow
-            
-        \end{twocolentry}
-
-
-        \vspace{0.2 cm}
-
-        \begin{twocolentry}{
-            Ch\^atillon, France
-
-        April 2023 – May 2024
-        }
-            \textbf{ONERA (the French Aerospace Lab)}, Research Engineer
-            
-        \end{twocolentry}
-
-        \vspace{0.2 cm}
-
-        \begin{twocolentry}{
-            Ch\^atillon, France
-
-        Oct 2021 – April 2023
-        }
-            \textbf{ONERA (the French Aerospace Lab)}, Postdoctoral Researcher
-            
-        \end{twocolentry}
-
-        \vspace{0.2 cm}
-
-        \begin{twocolentry}{
-            Toulouse, France
-
-        Oct 2020 – Sep 2021
-        }
-            \textbf{CERFACS}, Postdoctoral Researcher
-            
-        \end{twocolentry}
-
-    \section{Education}
-
-
-
-        
-        \begin{twocolentry}{
-            2016 – 2020
-        }
-            \textbf{PhD} in Mathematics 
-            \begin{highlights}
-                \item \textbf{Brunel, University of London}
-                \item Thesis: \textit{Spatially Continuous and Discontinuous Galerkin Finite Element Approximations for Dynamic Viscoelastic Problems}
-                \item Supervisor: Simon Shaw and Mike Warby
-            \end{highlights}
-        \end{twocolentry}
-
-   \vspace{0.2 cm}
-    
-        
-        \begin{twocolentry}{
-            2014 – 2015
-        }
-            \textbf{MSc} in Applied Mathematics 
-            \begin{highlights}
-                \item \textbf{Imperial College London}
-                \item Dissertation: \textit{Numerical Simulation of Growing and Collapsing Sandpiles}
-                \item Supervisor: Robert N\"urnberg
-            \end{highlights}
-        \end{twocolentry}
-
-   \vspace{0.2 cm}
-
-        
-        
-        \begin{twocolentry}{
-            2008 – 2014
-        }
-            \textbf{BSc} in Mathematics 
-            \begin{highlights}
-                \item \textbf{Kyung Hee University}
-                \item \textbf{Summa Cum Laude}
-            \end{highlights}
-        \end{twocolentry}
-    
-
-    
-    \section{Publications}
-
-        
-        \begin{enumerate}
-            \item
-            \begin{twocolentry}{
-                2021
-            }
-                \textbf{A Priori Error Analysis for a Finite Element Approximation of Dynamic Viscoelasticity Problems Involving a Fractional Order Integro-differential Constitutive Law}
-
-
-                \mbox{Yongseok Jang},  \mbox{Simon Shaw}
-
-        \textit{Advances in Computational Mathematics}
-        
-        
-        \href{https://doi.org/10.1007/s10444-021-09857-8}{10.1007/s10444-021-09857-8}
-            \end{twocolentry}
-             
-            \item
-            \begin{twocolentry}{
-                2022
-            }
-                \textbf{Finite Element Approximation and Analysis of a Viscoelastic Scalar Wave Equation with Internal Variable Formulations}
-
-
-                \mbox{Yongseok Jang},  \mbox{Simon Shaw}
-
-        \textit{Journal of Computational and Applied Mathematics}
-        
-        
-        \href{https://doi.org/10.1016/j.cam.2022.114340}{10.1016/j.cam.2022.114340}
-            \end{twocolentry}
-        
-        \item
-            \begin{twocolentry}{
-                2023
-            }
-                \textbf{A Priori Analysis of Symmetric Interior Penalty Discontinuous Galerkin Finite Element Method for Dynamic Linear Viscoelasticity Model}
-
-
-                \mbox{Yongseok Jang},  \mbox{Simon Shaw}
-
-        \textit{Computational Methods in Applied Mathematics}
-        
-        
-        \href{https://doi.org/10.1515/cmam-2022-0201}{10.1515/cmam-2022-0201}
-            \end{twocolentry}
-
-
-        \item
-            \begin{twocolentry}{
-                2024
-            }
-                \textbf{Randomized flexible GMRES with deflated restarting}
-
-
-                \mbox{Yongseok Jang},  \mbox{Laura Grigori}, \mbox{Emeric Martin}, \mbox{C\'edric Content}
-
-        \textit{Numerical Algorithms}
-        
-        
-        \href{https://doi.org/10.1007/s11075-024-01801-3}{10.1007/s11075-024-01801-3}
-            \end{twocolentry}
-        \item
-            \begin{twocolentry}{
-                2024
-            }
-                \textbf{Discontinuous Galerkin finite element method for dynamic viscoelasticity models of power-law type}
-
-
-                \mbox{Yongseok Jang},  \mbox{Simon Shaw}
-
-        \textit{Numerical Methods for Partial Differential Equations}
-        
-        
-        \href{https://doi.org/10.1002/num.23107}{10.1002/num.23107}
-            \end{twocolentry}
-        \item
-            \begin{twocolentry}{
-                2024
-            }
-                \textbf{Two-level dynamic load-balanced  $p$-adaptive discontinuous Galerkin methods for compressible CFD simulations}
-
-
-                \mbox{Yongseok Jang},  \mbox{Emeric Martin}, \mbox{Jean-Baptiste Chapelier}, \mbox{Vincent Couaillier}
-
-        \textit{Computers \& Mathematics with Applications}
-        
-        
-        \href{https://doi.org/10.1016/j.camwa.2024.10.008}{10.1016/j.camwa.2024.10.008}
-            \end{twocolentry}
-        \item
-            \begin{twocolentry}{
-                2024
-            }
-                \textbf{Fast linear solvers for incompressible CFD simulations with compatible discrete operator schemes}
-
-
-                \mbox{Yongseok Jang},  \mbox{J\'er\^ome Bonelle}, \mbox{Carola Kruse}, \mbox{Frank H\"ulsemann}, \mbox{Ulrich R\"ude}
-
-        \textit{Computational and Applied Mathematics} 
-        
-        % \vspace{0.10 cm}
-        
-        \href{https://doi.org/10.1007/s40314-024-03003-y}{10.1007/s40314-024-03003-y}
-            \end{twocolentry}        
-        \item
-            \begin{twocolentry}{
-                2025
-            }
-                \textbf{Randomized orthogonalization process with reorthogonalization}
-
-
-                \mbox{Yongseok Jang},  \mbox{Laura Grigori}
-
-        % \textit{submitted}
-        \textit{Numerical Linear Algebra with Applications}
-        
-        \href{https://doi.org/10.1002/nla.70029}{10.1002/nla.70029}
-            \end{twocolentry}
-        \item
-            \begin{twocolentry}{
-                2025
-            }
-                \textbf{A priori and a posteriori analyses of a quasi-static fractional order viscoelasticity model}
-        
-                \mbox{Yongseok Jang}
-        
-        % \textit{submitted}
-        
-         \textit{Mathematics and Mechanics of Solids} 
-         
-         \href{https://doi.org/10.1177/10812865251363461}{10.1177/10812865251363461}
-            \end{twocolentry}
-            \item
-            \begin{twocolentry}{2026
-            }
-                \textbf{Internal variable reformulation of Volterra integro-differential equations with exponential kernels for physics-informed neural networks}
-        
-                \mbox{Yongseok Jang}        
-
-                \textit{AIMS Mathematics} 
-                
-         \href{https://doi.org/10.3934/math.2026677}{10.3934/math.2026677}
-        
-            \end{twocolentry}
-            \item
-            \begin{twocolentry}{2026
-            }
-                \textbf{Mixed Precision Augmented GMRES
+% Section titles: coloured, bold, rule to the right margin
+\titleformat{\section}{%
+    \needspace{4\baselineskip}\large\color{primaryColor}%
+}{}{0pt}{%
+    \textbf{#1}\hspace{0.15cm}\titlerule[0.8pt]%
 }
-        
-                \mbox{Yongseok Jang, Th\'eo Mary,  Pierre Jolivet}        
-        
-        \textit{Numerical Linear Algebra with Applications}
-        
-        \href{https://doi.org/10.1002/nla.70117}{10.1002/nla.70117}
-        
-            \end{twocolentry}
-            
-             \item
-            \begin{twocolentry}{2026
-            }
-                \textbf{Phase-field decoupled method for multi-component Cahn--Hilliard equation}
-        
-                \mbox{Youngjin Hwang, Yongseok Jang}        
-                
-                \textit{Journal of the Korean Society for Industrial and Applied Mathematics, Accepted}
-           
-            \end{twocolentry}  
-            \item
-            \begin{twocolentry}{
-            }
-                \textbf{A stable DG-POD reduced-order method for dynamic linear viscoelasticity}
-        
-                \mbox{Byeong-Chun Shin, Yongseok Jang}        
-                
-                \textit{Under review}
-           
-            \end{twocolentry}        
-                        
-                     \item
-            \begin{twocolentry}{
-            }
-                \textbf{Relaxation-aware adaptive snapshot selection for DG-POD of viscoelastic dynamics}
-        
-                \mbox{Byeong-Chun Shin, Yongseok Jang}        
-                
-                \textit{Under review}
-           
-            \end{twocolentry}      
-            
-            % \item
-            % \begin{twocolentry}{
-                
-            % }
-            %     \textbf{Advanced randomized GMRES}
-        
-            %     \mbox{Yongseok Jang, Laura Grigori }        \textit{in preparation}
+\titlespacing{\section}{0pt}{0.25cm}{0.12cm}
 
-        
-            % \end{twocolentry}
+% Sub-headings inside a section (e.g. Journal articles / Submitted)
+\newcommand{\cvsubheading}[1]{%
+    \needspace{3\baselineskip}\par\vspace{0.08cm}%
+    {\small\bfseries\color{primaryColor!80!black}#1}\par\vspace{0.04cm}%
+}
 
-            % \item
-            % \begin{twocolentry}{
-            % }
-            %     \textbf{Degree-stratified randomized spectral clustering for power-law graphs}
-        
-            %     \mbox{Junghyun Eom, Youngjin Hwang, Euihyun Kim, Yongseok Jang}        \textit{in preparation}
-           
-            % \end{twocolentry}
-            
-            % \item
-            % \begin{twocolentry}{
-            % }
-            %     \textbf{Neural multigrid proconditioner for solving linear systems}
-        
-            %     \mbox{Yongseok Jang, Xinye Chen}        \textit{in preparation}
-           
-            % \end{twocolentry}
-               
-        \end{enumerate}
-        
+% ============================================================
+%  Entry layouts
+% ============================================================
+% Width of the left date column, shared by every dated section
+\newlength{\datecolwidth}
+\setlength{\datecolwidth}{2.35cm}
 
-    
-    % \section{Honors and Awards}
+% Dated list: \item[<date>] <content>
+\newenvironment{cvlist}{%
+    \begin{itemize}[
+        leftmargin=\datecolwidth,
+        labelwidth=\datecolwidth-0.2cm,
+        labelsep=0.2cm,
+        align=left,
+        font=\small\color{gray},
+        topsep=0pt, partopsep=0pt, parsep=0pt,
+        itemsep=0.12cm
+    ]
+}{\end{itemize}}
 
+% Numbered publication list (same indent as the date column)
+\newenvironment{publist}[1][1]{%
+    \begin{enumerate}[
+        start=#1,
+        label={[\arabic*]},
+        leftmargin=\datecolwidth,
+        labelwidth=\datecolwidth-0.2cm,
+        labelsep=0.2cm,
+        align=left,
+        font=\small\color{gray},
+        topsep=0pt, partopsep=0pt, parsep=0pt,
+        itemsep=0.12cm
+    ]
+}{\end{enumerate}}
 
+% Author highlighting
+\newcommand{\me}{\textbf{Y.~Jang}}
 
-        
-    %     \begin{twocolentry}{
-    %         2008, 2009, 2012, 2013 
-    %     }
-    %         \textbf{Academic Excellence Awards}
-    %         \begin{highlights}
-    %             \item Kyung Hee University
-    %         \end{highlights}
-    %     \end{twocolentry}        
-    %     \begin{twocolentry}{
-    %         2008, 2009, 2012, 2013 
-    %     }
-    %         \textbf{Academic Excellence Scholarships}
-    %         \begin{highlights}
-    %             \item Kyung Hee University
-    %         \end{highlights}
-    %     \end{twocolentry}
-    %             \begin{twocolentry}{
-    %         2016-2020 
-    %     }
-    %         \textbf{Vice-Chancellor’s Scholarship}
-    %         \begin{highlights}
-    %             \item Brunel, University of London
-    %         \end{highlights}
-    %     \end{twocolentry}  
-    %     \begin{twocolentry}{
-    %         2019 
-    %     }
-    %         \textbf{CEDPS Conference Funding}
-    %         \begin{highlights}
-    %             \item Brunel, University of London
-    %         \end{highlights}
-    %     \end{twocolentry}
-    %     \begin{twocolentry}{
-    %         2018, 2022 
-    %     }
-    %         \textbf{Travel Funding}
-    %         \begin{highlights}
-    %                         \item UK Graduate Modelling Camp, InFoMM (University of Oxford)
-    %             \item LMS Invited Lectures on the Mathematics of Deep Learning, Isaac Newton Institute for Mathematical Sciences (University of Cambridge)
-    %         \end{highlights}
-    %     \end{twocolentry}
+% "Last update" stamp in the top-right corner
+\newcommand{\placelastupdatedtext}{%
+  \AddToShipoutPictureFG*{%
+    \put(
+        \LenToUnit{\paperwidth-1.6cm},
+        \LenToUnit{\paperheight-0.9cm}
+    ){\makebox[0pt][r]{\small\color{gray}\textit{Last update: \today}}}%
+  }%
+}
 
+% External links get a small arrow
+\let\hrefWithoutArrow\href
+\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize\faExternalLink*}}}
 
+\newcommand{\doi}[1]{\mbox{\href{https://doi.org/#1}{DOI}}}
+\newcommand{\sep}{\hspace{0.3cm}{\color{gray}|}\hspace{0.3cm}}
 
-    
-    \section{Presentations}   
-    \begin{onecolentry}
-        \textbf{Randomized Numerical Linear Algebra and Mixed Precision for Scalable Machine Learning}
-        
-        2026 KSCFE Spring, South Korea.
+% ============================================================
+\begin{document}
+\placelastupdatedtext
 
-        April 2026, Selected Talk.
-        \end{onecolentry}\vspace{0.10cm}   
-    \begin{onecolentry}
-        \textbf{Mathematics in Aerospace Engineering}        
-        Undergraduate Colloquium, Kyung Hee University, South Korea.
+% ------------------------------------------------------------
+%  Header
+% ------------------------------------------------------------
+\begin{center}
+    {\color{primaryColor}\fontsize{24pt}{24pt}\selectfont\textbf{Yongseok JANG}}
 
-        April 2026, Invited Talk.
-        \end{onecolentry}\vspace{0.10cm}   
-    \begin{onecolentry}
-        \textbf{Numerical solutions to viscoelastic model problems}
-        
-        Winter Workshop: PDE and Applied Mathematics, Chonnam National University, South Korea.
+    \vspace{0.25cm}
+    {\small\color{primaryColor}%
+    {\footnotesize\faMapMarker*}\hspace{0.13cm}Chonnam National University, Gwangju, Korea%
+    \sep
+    \hrefWithoutArrow{mailto:yongseok.jang@jnu.ac.kr}{{\footnotesize\faEnvelope[regular]}\hspace{0.13cm}yongseok.jang@jnu.ac.kr}%
+    \sep
+    \hrefWithoutArrow{https://sites.google.com/view/yjang}{{\footnotesize\faLink}\hspace{0.13cm}sites.google.com/view/yjang}}
+\end{center}
+\vspace{-0.2cm}
 
-        January 2026, Invited Talk.
-        \end{onecolentry}\vspace{0.10cm}
-    \begin{onecolentry}
-        \textbf{Robust Krylov Subspace Methods with Randomization
-and Mixed Precision}
-        
-        2025 KSIAM Annual Meeting, South Korea.
+% ------------------------------------------------------------
+\section{Research Interests}
+Numerical methods for partial differential equations; computational continuum mechanics;
+numerical linear algebra; scientific and high-performance computing.
 
-        November 2025, Selected Talk.
-        \end{onecolentry}\vspace{0.10cm}
-    \begin{onecolentry}
-        \textbf{Randomized linear algebra and mixed precision: toward numerical foundations for AI}
-        
-        National Institute for Mathematical Sciences, South Korea.
+% ------------------------------------------------------------
+\section{Employment}
+\begin{cvlist}
+    \item[2025 -- present] \textbf{Assistant Professor}, Department of Mathematics, Chonnam National University, Gwangju, Korea
+    \item[2024 -- 2025] \textbf{Postdoctoral Research Fellow}, LIP6, Sorbonne Universit\'e, Paris, France
+    \item[2021 -- 2024] \textbf{ONERA} (the French Aerospace Lab), Ch\^atillon, France\\
+        Research Engineer (2023--2024); Postdoctoral Researcher (2021--2023)
+    \item[2020 -- 2021] \textbf{Postdoctoral Researcher}, CERFACS, Toulouse, France
+\end{cvlist}
 
-        November 2025, Invited Talk.
-        \end{onecolentry}\vspace{0.10cm}
-    \begin{onecolentry}
-        \textbf{Randomized orthogonalization in GMRES with deflation and augmentation}
-        
-        Householder Symposium XXII, Cornell University, USA.
+% ------------------------------------------------------------
+\section{Education}
+\begin{cvlist}
+    \item[2016 -- 2020] \textbf{PhD in Mathematics}, Brunel University London, UK\\
+        Thesis: \textit{Spatially Continuous and Discontinuous Galerkin Finite Element Approximations for Dynamic Viscoelastic Problems}.
+        Supervisors: Simon Shaw and Mike Warby
+    \item[2014 -- 2015] \textbf{MSc in Applied Mathematics}, Imperial College London, UK\\
+        Dissertation: \textit{Numerical Simulation of Growing and Collapsing Sandpiles}. Supervisor: Robert N\"urnberg
+    \item[2008 -- 2014] \textbf{BSc in Mathematics}, Kyung Hee University, Korea, \textit{Summa Cum Laude}
+\end{cvlist}
 
-        June 2025, Selected Talk.
-        \end{onecolentry}\vspace{0.10cm}
-        \begin{onecolentry}
-        \textbf{Combining mixed precision with deflation and augmentation for accelerating GMRES}
-        
-        Sparse Days 2025, CERFACS and ENSEEIHT/IRIT, France.
+% ------------------------------------------------------------
+\section{Publications}
 
-        June 2025, Selected Talk.
-        \end{onecolentry}\vspace{0.10cm}
-        \begin{onecolentry}
-        \textbf{Enhancing GMRES performance with randomization and
-mixed precision techniques}
-        
-        Alpines Seminar, INRIA Paris,  France
+\cvsubheading{Journal articles}
+\begin{publist}
+    \item Y.~Hwang, \me.
+        Phase-field decoupled method for multi-component Cahn--Hilliard equation.
+        \textit{Journal of the Korean Society for Industrial and Applied Mathematics}, accepted, 2026.
+    \item \me, T.~Mary, P.~Jolivet.
+        Mixed precision augmented GMRES.
+        \textit{Numerical Linear Algebra with Applications}, 2026. \doi{10.1002/nla.70117}
+    \item \me.
+        Internal variable reformulation of Volterra integro-differential equations with exponential kernels for physics-informed neural networks.
+        \textit{AIMS Mathematics}, 2026. \doi{10.3934/math.2026677}
+    \item \me.
+        A priori and a posteriori analyses of a quasi-static fractional order viscoelasticity model.
+        \textit{Mathematics and Mechanics of Solids}, 2025. \doi{10.1177/10812865251363461}
+    \item \me, L.~Grigori.
+        Randomized orthogonalization process with reorthogonalization.
+        \textit{Numerical Linear Algebra with Applications}, 2025. \doi{10.1002/nla.70029}
+    \item \me, J.~Bonelle, C.~Kruse, F.~H\"ulsemann, U.~R\"ude.
+        Fast linear solvers for incompressible CFD simulations with compatible discrete operator schemes.
+        \textit{Computational and Applied Mathematics}, 2024. \doi{10.1007/s40314-024-03003-y}
+    \item \me, E.~Martin, J.-B.~Chapelier, V.~Couaillier.
+        Two-level dynamic load-balanced $p$-adaptive discontinuous Galerkin methods for compressible CFD simulations.
+        \textit{Computers \& Mathematics with Applications}, 2024. \doi{10.1016/j.camwa.2024.10.008}
+    \item \me, S.~Shaw.
+        Discontinuous Galerkin finite element method for dynamic viscoelasticity models of power-law type.
+        \textit{Numerical Methods for Partial Differential Equations}, 2024. \doi{10.1002/num.23107}
+    \item \me, L.~Grigori, E.~Martin, C.~Content.
+        Randomized flexible GMRES with deflated restarting.
+        \textit{Numerical Algorithms}, 2024. \doi{10.1007/s11075-024-01801-3}
+    \item \me, S.~Shaw.
+        A priori analysis of symmetric interior penalty discontinuous Galerkin finite element method for dynamic linear viscoelasticity model.
+        \textit{Computational Methods in Applied Mathematics}, 2023. \doi{10.1515/cmam-2022-0201}
+    \item \me, S.~Shaw.
+        Finite element approximation and analysis of a viscoelastic scalar wave equation with internal variable formulations.
+        \textit{Journal of Computational and Applied Mathematics}, 2022. \doi{10.1016/j.cam.2022.114340}
+    \item \me, S.~Shaw.
+        A priori error analysis for a finite element approximation of dynamic viscoelasticity problems involving a fractional order integro-differential constitutive law.
+        \textit{Advances in Computational Mathematics}, 2021. \doi{10.1007/s10444-021-09857-8}
+\end{publist}
 
-        February 2025, Invited Talk
-        \end{onecolentry}
-        \begin{onecolentry}
-        \textbf{Modern CFD: two-level load balancing for p-adaptation}
-        
-        KHU Seminar, Kyung Hee University,  Korea
+\cvsubheading{Submitted}
+\begin{publist}[13]
+    \item B.-C.~Shin, \me.
+        Relaxation-aware adaptive snapshot selection for DG-POD of viscoelastic dynamics.
+        Under review.
+    \item B.-C.~Shin, \me.
+        A stable DG-POD reduced-order method for dynamic linear viscoelasticity.
+        Under review.
+    % --- In preparation (uncomment to show) ---
+    % \item \me, L.~Grigori. Advanced randomized GMRES. In preparation.
+    % \item J.~Eom, Y.~Hwang, E.~Kim, \me. Degree-stratified randomized spectral clustering for power-law graphs. In preparation.
+    % \item \me, X.~Chen. Neural multigrid preconditioner for solving linear systems. In preparation.
+\end{publist}
 
-        April 2024, Invited Talk
-        \end{onecolentry}
-        
-\vspace{0.10cm}
+% ------------------------------------------------------------
+\section{Presentations}
 
-        \begin{onecolentry}
-        \textbf{Navigating Space with Modern CFD}
-        
-        ASCOF Aerospatiale Seminar Paris, France
+\cvsubheading{Invited talks}
+\begin{cvlist}
+    \item[Apr 2026] \textit{Mathematics in aerospace engineering}. Undergraduate Colloquium, Kyung Hee University, Korea
+    \item[Jan 2026] \textit{Numerical solutions to viscoelastic model problems}. Winter Workshop: PDE and Applied Mathematics, Chonnam National University, Korea
+    \item[Nov 2025] \textit{Randomized linear algebra and mixed precision: toward numerical foundations for AI}. National Institute for Mathematical Sciences, Korea
+    \item[Feb 2025] \textit{Enhancing GMRES performance with randomization and mixed precision techniques}. Alpines Seminar, INRIA Paris, France
+    \item[Apr 2024] \textit{Modern CFD: two-level load balancing for $p$-adaptation}. KHU Seminar, Kyung Hee University, Korea
+    \item[Jan 2024] \textit{Navigating space with modern CFD}. ASCOF Aerospatiale Seminar, Paris, France
+    \item[Jul 2023] \textit{Advanced GMRES methods with randomized orthogonalization}. Seminar of Numerical Analysis, Kyung Hee University, Korea
+    \item[Sep 2022] \textit{Fast and reliable solvers for computational fluid dynamics}. ASCOF Paris Regional Meeting, Cit\'e Internationale Universitaire de Paris, France
+    \item[Nov 2021] \textit{Fast linear solvers for compatible discrete operator schemes arising in incompressible CFD simulations}. Algo-Coop Seminar, CERFACS, France
+    \item[Aug 2021] \textit{AMG methods for non-symmetric systems arising in CDO schemes}. Scientific Computing Seminar, Kyung Hee University, Korea
+\end{cvlist}
 
-        January 2024, Invited Talk
-        \end{onecolentry}
-\vspace{0.10cm}
+\cvsubheading{Contributed talks and posters}
+\begin{cvlist}
+    \item[Apr 2026] \textit{Randomized numerical linear algebra and mixed precision for scalable machine learning}. KSCFE Spring Meeting, Korea
+    \item[Nov 2025] \textit{Robust Krylov subspace methods with randomization and mixed precision}. KSIAM Annual Meeting, Korea
+    \item[Jun 2025] \textit{Randomized orthogonalization in GMRES with deflation and augmentation}. Householder Symposium XXII, Cornell University, USA
+    \item[Jun 2025] \textit{Combining mixed precision with deflation and augmentation for accelerating GMRES}. Sparse Days 2025, CERFACS and ENSEEIHT/IRIT, France
+    \item[Oct 2023] \textit{Advanced GMRES methods with randomized orthogonalization}. GAMM Workshop on Applied and Numerical Linear Algebra, University of Augsburg, Germany
+    \item[Jun 2022] \textit{Randomized flexible GMRES with singular vectors based deflated restarting}. 7th IMA Conference on Numerical Linear Algebra and Optimization, University of Birmingham, UK
+    \item[Jun 2022] \textit{Randomized flexible GMRES with singular vectors based deflated restarting}. Sparse Days 2022, CERFACS and ENSEEIHT/IRIT, France
+    \item[Jun 2019] \textit{Discontinuous Galerkin finite element approximation of a fractional order model of viscoelasticity}. MAFELAP 2019, Brunel University London, UK
+    \item[Apr 2019] \textit{Discontinuous Galerkin method for viscoelastic problems with internal variables}. BAMC 2019, University of Bath, UK
+    \item[Jan 2019] \textit{Discontinuous Galerkin method for viscoelastic problems with internal variables}. SIAM UKIE Annual Meeting, University of Oxford, UK (poster)
+\end{cvlist}
 
-        \begin{onecolentry}
-        \textbf{Advanced GMRES Methods with Randomized Orthogonalization}
-        
-        GAMM Workshop on Applied and Numerical Linear Algebra, University of Augsburg,  Germany.
+% ------------------------------------------------------------
+%  (Hidden) Honors and Awards -- uncomment to show
+% ------------------------------------------------------------
+% \section{Honors and Awards}
+% \begin{cvlist}
+%     \item[2019] CEDPS Conference Funding, Brunel University London
+%     \item[2016 -- 2020] Vice-Chancellor's Scholarship, Brunel University London
+%     \item[2018, 2022] Travel Funding: UK Graduate Modelling Camp, InFoMM (University of Oxford); LMS Invited Lectures on the Mathematics of Deep Learning, Isaac Newton Institute (University of Cambridge)
+%     \item[2008 -- 2013] Academic Excellence Awards and Scholarships (2008, 2009, 2012, 2013), Kyung Hee University
+% \end{cvlist}
 
-        October 2023, Selected Talk.
-        \end{onecolentry}\vspace{0.10cm}
+% ------------------------------------------------------------
+%  (Hidden) Teaching -- uncomment to show
+% ------------------------------------------------------------
+% \section{Teaching Experience}
+% \begin{cvlist}
+%     \item[2016 -- 2020] \textbf{Graduate Teaching Assistant}, Brunel University London.
+%         \textit{Computing Projects and Mechanics}; \textit{Algorithms and Numerical Methods}; \textit{Numerical Analysis Projects}; \textit{Final Year Project}
+%     \item[2018 -- 2020] \textbf{Maths Caf\'e Tutor and Academic Skills Adviser}, Brunel Educational Excellence Centre
+%     \item[2012 -- 2013] \textbf{Teaching Assistant}, Kyung Hee University.
+%         \textit{Introduction to Abstract Algebra}; \textit{Vector Calculus}
+% \end{cvlist}
 
-        \begin{onecolentry}
-        \textbf{Advanced GMRES Methods with Randomized Orthogonalization}
-        
-        Seminar of Numerical Analysis, Kyung Hee University, Korea
+% ------------------------------------------------------------
+\section{Professional Activities}
+\begin{cvlist}
+    \item[2026 -- present] \textbf{Board Member}, Korean Society for Computational Fluids Engineering (KSCFE)
+    \item[2019 -- present] \textbf{Peer Reviewer} for
+        \textit{SIAM J.\ Sci.\ Comput.}, \textit{SIAM J.\ Matrix Anal.\ Appl.},
+        \textit{Numer.\ Methods Partial Differential Equations}, \textit{ESAIM: M2AN},
+        \textit{Comput.\ Appl.\ Math.}, \textit{Appl.\ Math.\ Sci.\ Eng.}, \textit{Electron.\ Res.\ Arch.}, among others
+    \item[2024] \textbf{Contributor}, \textit{2023 European Research and Policy Trends Analysis} (aerospace sector), Korea-EU Research Centre.
+        \href{https://k-erc.eu/2024/04/publication/18602/}{Report}
+\end{cvlist}
 
-        July 2023, Invited Talk
-        \end{onecolentry}
-\vspace{0.10cm}
+% ------------------------------------------------------------
+\section{Computational Skills}
+\begin{cvlist}
+    \item[Languages] C/C++, MATLAB, Python, Fortran
+    \item[Software] FEniCS, deal.II, Code\_Saturne, elsA, CODA, PyTorch, TensorFlow, DeepXDE, GeoGebra, \LaTeX
+    \item[HPC] MPI, OpenMP, CUDA
+\end{cvlist}
 
-        \begin{onecolentry}
-        \textbf{Fast and Reliable Solvers for Computational Fluid
-Dynamics}
-        
-        ASCOF Paris Regional Meeting 2022 Cit\'e Internationale Universitaire de Paris, France
-
-        September 2022, Invited Talk
-        \end{onecolentry}\vspace{0.10cm}
-
-        \begin{onecolentry}
-        \textbf{Randomized Flexible GMRES with Singular Vectors Based Deflated Restarting}
-        
-        7th IMA Conference on Numerical Linear Algebra and Optimization, University of Birmingham, UK
-
-        June 2022, Selected Talk
-        \end{onecolentry}\vspace{0.10cm}
-
-
-        \begin{onecolentry}
-        \textbf{Randomized Flexible GMRES with Singular Vectors Based Deflated Restarting}
-        
-        Sparse Days 2022, CERFACS and ENSEEIHT/IRIT, France
-
-        June 2022, Selected Talk
-        \end{onecolentry}\vspace{0.10cm}
-
-        \begin{onecolentry}
-        \textbf{Fast Linear Solvers for Compatible Discrete Operator Schemes Arising in Incompressible CFD Simulations}
-        
-        Algo-Coop seminar, CERFACS, France
-
-        November 2021, Invited Talk
-        \end{onecolentry}\vspace{0.10cm}
-
-        \begin{onecolentry}
-        \textbf{AMG methods for non-symmetric systems arising in CDO schemes}
-        
-        Scientific Computing Seminar, Kyung Hee University, Korea
-
-        August 2021, Invited Talk
-        \end{onecolentry}\vspace{0.10cm}
-
-        \begin{onecolentry}
-        \textbf{Discontinuous Galerkin Finite Element Approximation of a Fractional Order Model of Viscoelasticity}
-        
-        MAFELAP 2019, Brunel, University of London, UK
-
-        June 2019, Selected Talk
-        \end{onecolentry}\vspace{0.10cm}
-
-        \begin{onecolentry}
-        \textbf{Discontinuous Galerkin Method for Viscoelastic Problems with Internal Variables}
-        
-        BAMC 2019, University of Bath, UK
-
-        April 2019, Selected Talk
-        \end{onecolentry}\vspace{0.10cm}
-
-        \begin{onecolentry}
-        \textbf{Discontinuous Galerkin Method for Viscoelastic Problems with Internal Variables}
-        
-        SIAM UKIE Annual Meeting, University of Oxford, UK
-
-        January 2019, Poster presentation
-        \end{onecolentry}
-    
-    % \section{Teaching Experiences}
-
-    % \begin{twocolentry}
-    %     {2016-2020}{\textbf{Graduate Teaching Assistant}
-    %     \begin{itemize}
-    %         \item Brunel, University of London
-    %         \item Subject: \textit{Computing Projects and Mechanics};
-    %             \textit{Algorithms and Numerical Methods};\\ \textit{Numerical Analysis Projects}; \textit{Final Year Project}
-    %         % \begin{itemize}
-    %         %     \item Computing Projects and Mechanics
-    %         %     \item Algorithms and Numerical Methods
-    %         %     \item Programming and Mathematical Projects
-    %         %     \item Final Year Project
-    %         %     \item Advanced Calculus and Numerical Methods
-    %         %     \item Drop in \textsc{MATLAB} and \textsc{LATEX}
-    %         % \end{itemize} 
-    %     \end{itemize}        
-    %     }
-    % \end{twocolentry}
-    %     \begin{twocolentry}
-    %     {2018-2020}{\textbf{Maths Caf\'e Tutor} and \textbf{Academic Skills Adviser}
-    %     \begin{itemize}
-    %         \item Brunel Educational Excellence Centre
-    %         \item Provided a range of maths and numeracy support
-    %     \end{itemize}        
-    %     }
-    % \end{twocolentry}    
-    % \begin{twocolentry}
-    %     {2012-2013}{\textbf{Teaching Assistant}
-    %     \begin{itemize}
-    %         \item Kyung Hee University
-    %         \item Subject: \textit{Introduction to Abstract Algebra}; \textit{Vector Calculus} 
-    %         % \begin{itemize}
-    %         %     \item Introduction to Abstract Algebra
-    %         %     \item Vector Calculus
-    %         % \end{itemize} 
-    %     \end{itemize}        
-    %     }
-    % \end{twocolentry}
-    \section{Computational Skills}
-    \begin{onecolentry}
-        \textbf{Programming Languages}: \textsc{C/C$++$, matlab, python, fortran}
-    \end{onecolentry}
-    \vspace{0.2 cm}
-    \begin{onecolentry}
-        \textbf{Software Packages}: LaTeX, Code\_Saturne, FEniCS, deal.II, GeoGebra, elsA, CODA, TensorFlow, PyTorch, DeepXDE
-    \end{onecolentry}
-    \vspace{0.2 cm}
-    \begin{onecolentry}
-        \textbf{High Performance of Computing}: \textsc{OpenMP, MPI, CUDA}
-    \end{onecolentry}
-    
-    \section{Professional Activities}
-    \begin{twocolentry}
-        {2026 – Present}
-        {\textbf{Korean Society for Computational Fluids Engineering (KSCFE)}
-        \begin{itemize}
-            \item Serving as a Board Member, contributing to the strategic planning of academic conferences and fostering technical advancements in the field of computational fluid dynamics.
-        \end{itemize}
-        }
-    \end{twocolentry}
-    \begin{twocolentry}
-        {2024}{\textbf{2023 European Research and Policy Trends Analysis}
-        \begin{itemize}
-            \item Contributed to a comprehensive report detailing the latest research trends and policy changes in the European aerospace sector,
- Korea-EU Research Centre \href{https://k-erc.eu/2024/04/publication/18602/}{https://k-erc.eu/2024/04/publication/18602/}
-        \end{itemize}        
-        }
-    \end{twocolentry}
-    \begin{twocolentry}
-        {2019-Present}{\textbf{Peer Reviewer}
-        \begin{itemize}
-            \item Review journal articles:
-                \textit{SIAM Journal on Scientific Computing},
-                \textit{SIAM Journal on Matrix Analysis and Applications},
- \textit{Numerical Methods for Partial Differential Equations},  
-                 \textit{ESAIM: Mathematical Modelling and Numerical Analysis}, 
-                \textit{Computational and Applied Mathematics}, \textit{Applied Mathematics in Science and Engineering},                 \textit{Electronic Research Archive}, etc.
-
-        \end{itemize}        
-        }
-    \end{twocolentry}
-    
-    
 \end{document}
