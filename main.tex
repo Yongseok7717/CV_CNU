@@ -1,175 +1,155 @@
 \documentclass[10pt, a4paper]{article}
+% ============================================================
+%  Yongseok Jang -- Curriculum Vitae
+%  Layout: single left date column, Libertine serif body,
+%  Biolinum sans headings, teal accent.
+% ============================================================
 
-% ============================================================
-%  Packages
-% ============================================================
+% --- Geometry -----------------------------------------------
 \usepackage[
-    ignoreheadfoot,
-    top=1.5cm, bottom=1.5cm,
-    left=1.6cm, right=1.6cm,
-    footskip=0.8cm,
+    top=1.5cm, bottom=1.5cm, left=1.7cm, right=1.7cm,
+    footskip=0.8cm, ignoreheadfoot
 ]{geometry}
-\usepackage[explicit]{titlesec}
-\usepackage{tabularx}
-\usepackage{array}
+
+% --- Fonts ---------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[sb]{libertine}          % Linux Libertine (serif) + Biolinum (sans)
+\usepackage[libertine]{newtxmath}   % matching maths
+\usepackage{microtype}
+
+% --- Colour --------------------------------------------------
 \usepackage[dvipsnames]{xcolor}
-\definecolor{primaryColor}{RGB}{0, 79, 144}
+\definecolor{accent}{RGB}{0, 96, 112}      % deep teal
+\definecolor{accentlight}{RGB}{190, 214, 218}
+\definecolor{muted}{RGB}{110, 110, 110}
+\definecolor{ink}{RGB}{30, 30, 30}
+\color{ink}
+
+% --- Utilities -----------------------------------------------
+\usepackage[explicit]{titlesec}
 \usepackage{enumitem}
 \usepackage{fontawesome5}
 \usepackage{amsmath}
+\usepackage{calc}
+\usepackage{needspace}
+\usepackage{lastpage}
+\usepackage{etoolbox}
+\usepackage{tabularx}
 \usepackage[
     pdftitle={Yongseok Jang -- CV},
     pdfauthor={Yongseok Jang},
-    colorlinks=true,
-    urlcolor=primaryColor,
-    linkcolor=primaryColor
+    colorlinks=true, urlcolor=accent, linkcolor=accent
 ]{hyperref}
-\usepackage[pscoord]{eso-pic}
-\usepackage{calc}
 \usepackage{bookmark}
-\usepackage{lastpage}
-\usepackage{needspace}
-\usepackage{ifthen}
-\usepackage{iftex}
-\usepackage{etoolbox}
 
-% Machine-readable / ATS-parsable PDF
-\ifPDFTeX
-    \input{glyphtounicode}
-    \pdfgentounicode=1
-    \usepackage[T1]{fontenc}
-    \usepackage[utf8]{inputenc}
-    \usepackage{lmodern}
-\fi
-\usepackage[default, type1]{sourcesanspro}
-
-% ============================================================
-%  Page style
-% ============================================================
+% --- Page style ----------------------------------------------
 \setcounter{secnumdepth}{0}
 \setlength{\parindent}{0pt}
-\setlength{\topskip}{0pt}
+\setlength{\parskip}{0pt}
 \makeatletter
-\let\ps@customFooterStyle\ps@plain
-\patchcmd{\ps@customFooterStyle}{\thepage}{%
-    \color{gray}\textit{\small Page \thepage{} of \pageref*{LastPage}}%
+\let\ps@cv\ps@plain
+\patchcmd{\ps@cv}{\thepage}{%
+    \sffamily\footnotesize\color{muted}Yongseok Jang\ \textperiodcentered\ Curriculum Vitae\ \textperiodcentered\ \thepage\,/\,\pageref*{LastPage}%
 }{}{}
 \makeatother
-\pagestyle{customFooterStyle}
+\pagestyle{cv}
 
-% Section titles: coloured, bold, rule to the right margin
-\titleformat{\section}{%
-    \needspace{4\baselineskip}\large\color{primaryColor}%
-}{}{0pt}{%
-    \textbf{#1}\hspace{0.15cm}\titlerule[0.8pt]%
-}
-\titlespacing{\section}{0pt}{0.25cm}{0.12cm}
+% --- Section titles ------------------------------------------
+% small sans-serif caps in accent colour, thin light rule beneath
+\titleformat{\section}
+    {\needspace{4\baselineskip}\sffamily\bfseries\large\color{accent}}
+    {}{0pt}{\MakeUppercase{#1}}
+    [\vspace{-0.15em}{\color{accentlight}\titlerule[0.7pt]}]
+\titlespacing{\section}{0pt}{0.40cm}{0.18cm}
 
-% Sub-headings inside a section (e.g. Journal articles / Submitted)
+% sub-headings inside a section
 \newcommand{\cvsubheading}[1]{%
-    \needspace{3\baselineskip}\par\vspace{0.08cm}%
-    {\small\bfseries\color{primaryColor!80!black}#1}\par\vspace{0.04cm}%
+    \needspace{3\baselineskip}\par\vspace{0.10cm}%
+    {\sffamily\bfseries\small\color{ink!75}#1}\par\vspace{0.06cm}%
 }
 
-% ============================================================
-%  Entry layouts
-% ============================================================
-% Width of the left date column, shared by every dated section
+% --- Entry layouts -------------------------------------------
 \newlength{\datecolwidth}
-\setlength{\datecolwidth}{2.35cm}
+\setlength{\datecolwidth}{2.5cm}
 
-% Dated list: \item[<date>] <content>
+% dated list:  \item[<date>] <text>
 \newenvironment{cvlist}{%
     \begin{itemize}[
         leftmargin=\datecolwidth,
-        labelwidth=\datecolwidth-0.2cm,
-        labelsep=0.2cm,
+        labelwidth=\datecolwidth-0.25cm,
+        labelsep=0.25cm,
         align=left,
-        font=\small\color{gray},
+        font=\sffamily\footnotesize\color{muted},
         topsep=0pt, partopsep=0pt, parsep=0pt,
-        itemsep=0.12cm
+        itemsep=0.11cm
     ]
 }{\end{itemize}}
 
-% Numbered publication list (same indent as the date column)
+% numbered publication list
 \newenvironment{publist}[1][1]{%
     \begin{enumerate}[
         start=#1,
-        label={[\arabic*]},
+        label={\sffamily\footnotesize\color{accent}[\arabic*]},
         leftmargin=\datecolwidth,
-        labelwidth=\datecolwidth-0.2cm,
-        labelsep=0.2cm,
+        labelwidth=\datecolwidth-0.25cm,
+        labelsep=0.25cm,
         align=left,
-        font=\small\color{gray},
         topsep=0pt, partopsep=0pt, parsep=0pt,
-        itemsep=0.12cm
+        itemsep=0.11cm
     ]
 }{\end{enumerate}}
 
-% Author highlighting
 \newcommand{\me}{\textbf{Y.~Jang}}
+\newcommand{\doi}[1]{\mbox{\href{https://doi.org/#1}{\sffamily\footnotesize doi:#1}}}
+\newcommand{\extlink}[2]{\href{#1}{#2\,\raisebox{.1ex}{\scriptsize\faExternalLink*}}}
+\newcommand{\role}[1]{\textbf{#1}}
+\newcommand{\where}[1]{{\color{muted}#1}}
 
-% "Last update" stamp in the top-right corner
-\newcommand{\placelastupdatedtext}{%
-  \AddToShipoutPictureFG*{%
-    \put(
-        \LenToUnit{\paperwidth-1.6cm},
-        \LenToUnit{\paperheight-0.9cm}
-    ){\makebox[0pt][r]{\small\color{gray}\textit{Last update: \today}}}%
-  }%
+% --- Header --------------------------------------------------
+\newcommand{\cvheader}{%
+    \begin{minipage}[b]{0.60\linewidth}
+        {\sffamily\bfseries\fontsize{27}{30}\selectfont\color{accent}Yongseok Jang}\\[0.28cm]
+        {\itshape Assistant Professor of Mathematics}\\[0.05cm]
+        {\color{muted}Numerical PDEs \textperiodcentered\ Numerical linear algebra \textperiodcentered\ Scientific computing}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[b]{0.38\linewidth}
+        \raggedleft\sffamily\small
+        Department of Mathematics\\
+        Chonnam National University, Gwangju, Korea\\[0.12cm]
+        \href{mailto:yongseok.jang@jnu.ac.kr}{yongseok.jang@jnu.ac.kr}\ {\color{accent}\faEnvelope[regular]}\\
+        \href{https://sites.google.com/view/yjang}{sites.google.com/view/yjang}\ {\color{accent}\faGlobe}
+    \end{minipage}
+    \par\vspace{0.30cm}
+    {\color{accent}\rule{\linewidth}{1.4pt}}
+    \par\vspace{0.05cm}
+    {\sffamily\footnotesize\color{muted}\hfill Last updated \today}
 }
-
-% External links get a small arrow
-\let\hrefWithoutArrow\href
-\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize\faExternalLink*}}}
-
-\newcommand{\doi}[1]{\mbox{\href{https://doi.org/#1}{DOI}}}
-\newcommand{\sep}{\hspace{0.3cm}{\color{gray}|}\hspace{0.3cm}}
 
 % ============================================================
 \begin{document}
-\placelastupdatedtext
-
-% ------------------------------------------------------------
-%  Header
-% ------------------------------------------------------------
-\begin{center}
-    {\color{primaryColor}\fontsize{24pt}{24pt}\selectfont\textbf{Yongseok JANG}}
-
-    \vspace{0.25cm}
-    {\small\color{primaryColor}%
-    {\footnotesize\faMapMarker*}\hspace{0.13cm}Chonnam National University, Gwangju, Korea%
-    \sep
-    \hrefWithoutArrow{mailto:yongseok.jang@jnu.ac.kr}{{\footnotesize\faEnvelope[regular]}\hspace{0.13cm}yongseok.jang@jnu.ac.kr}%
-    \sep
-    \hrefWithoutArrow{https://sites.google.com/view/yjang}{{\footnotesize\faLink}\hspace{0.13cm}sites.google.com/view/yjang}}
-\end{center}
-\vspace{-0.2cm}
-
-% ------------------------------------------------------------
-\section{Research Interests}
-Numerical methods for partial differential equations; computational continuum mechanics;
-numerical linear algebra; scientific and high-performance computing.
+\cvheader
 
 % ------------------------------------------------------------
 \section{Employment}
 \begin{cvlist}
-    \item[2025 -- present] \textbf{Assistant Professor}, Department of Mathematics, Chonnam National University, Gwangju, Korea
-    \item[2024 -- 2025] \textbf{Postdoctoral Research Fellow}, LIP6, Sorbonne Universit\'e, Paris, France
-    \item[2021 -- 2024] \textbf{ONERA} (the French Aerospace Lab), Ch\^atillon, France\\
+    \item[2025 -- present] \role{Assistant Professor}, Department of Mathematics, Chonnam National University \where{Gwangju, Korea}
+    \item[2024 -- 2025] \role{Postdoctoral Research Fellow}, LIP6, Sorbonne Universit\'e \where{Paris, France}
+    \item[2021 -- 2024] \role{ONERA} (the French Aerospace Lab) \where{Ch\^atillon, France}\\
         Research Engineer (2023--2024); Postdoctoral Researcher (2021--2023)
-    \item[2020 -- 2021] \textbf{Postdoctoral Researcher}, CERFACS, Toulouse, France
+    \item[2020 -- 2021] \role{Postdoctoral Researcher}, CERFACS \where{Toulouse, France}
 \end{cvlist}
 
 % ------------------------------------------------------------
 \section{Education}
 \begin{cvlist}
-    \item[2016 -- 2020] \textbf{PhD in Mathematics}, Brunel University London, UK\\
+    \item[2016 -- 2020] \role{PhD in Mathematics}, Brunel University London \where{UK}\\
         Thesis: \textit{Spatially Continuous and Discontinuous Galerkin Finite Element Approximations for Dynamic Viscoelastic Problems}.
         Supervisors: Simon Shaw and Mike Warby
-    \item[2014 -- 2015] \textbf{MSc in Applied Mathematics}, Imperial College London, UK\\
+    \item[2014 -- 2015] \role{MSc in Applied Mathematics}, Imperial College London \where{UK}\\
         Dissertation: \textit{Numerical Simulation of Growing and Collapsing Sandpiles}. Supervisor: Robert N\"urnberg
-    \item[2008 -- 2014] \textbf{BSc in Mathematics}, Kyung Hee University, Korea, \textit{Summa Cum Laude}
+    \item[2008 -- 2014] \role{BSc in Mathematics}, Kyung Hee University \where{Korea} --- \textit{summa cum laude}
 \end{cvlist}
 
 % ------------------------------------------------------------
@@ -292,7 +272,7 @@ numerical linear algebra; scientific and high-performance computing.
         \textit{Numer.\ Methods Partial Differential Equations}, \textit{ESAIM: M2AN},
         \textit{Comput.\ Appl.\ Math.}, \textit{Appl.\ Math.\ Sci.\ Eng.}, \textit{Electron.\ Res.\ Arch.}, among others
     \item[2024] \textbf{Contributor}, \textit{2023 European Research and Policy Trends Analysis} (aerospace sector), Korea-EU Research Centre.
-        \href{https://k-erc.eu/2024/04/publication/18602/}{Report}
+        \extlink{https://k-erc.eu/2024/04/publication/18602/}{Report}
 \end{cvlist}
 
 % ------------------------------------------------------------
