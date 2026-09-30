@@ -1,14 +1,22 @@
-\documentclass[10pt, a4paper]{article}
+\documentclass[11pt, a4paper]{article}
 % ============================================================
 %  Yongseok Jang -- Curriculum Vitae
-%  Layout: single left date column, Libertine serif body,
-%  Biolinum sans headings, teal accent.
+%
+%  Design notes
+%   * Fonts: Linux Libertine (serif body) + Biolinum (sans for
+%     name, headings, dates); newtxmath for matching maths.
+%   * One accent colour (deep teal) + two greys; nothing else.
+%   * Employment / Education use two-line entries with the date
+%     set flush right; long lists (publications, talks) use a
+%     left date column so the eye can scan chronologically.
+%   * Spacing is generous on purpose: the CV is meant to breathe
+%     and to grow.
 % ============================================================
 
 % --- Geometry -----------------------------------------------
 \usepackage[
-    top=1.5cm, bottom=1.5cm, left=1.7cm, right=1.7cm,
-    footskip=0.8cm, ignoreheadfoot
+    top=2.0cm, bottom=2.0cm, left=2.1cm, right=2.1cm,
+    footskip=1.0cm, ignoreheadfoot
 ]{geometry}
 
 % --- Fonts ---------------------------------------------------
@@ -17,13 +25,14 @@
 \usepackage[sb]{libertine}          % Linux Libertine (serif) + Biolinum (sans)
 \usepackage[libertine]{newtxmath}   % matching maths
 \usepackage{microtype}
+\linespread{1.06}
 
 % --- Colour --------------------------------------------------
 \usepackage[dvipsnames]{xcolor}
-\definecolor{accent}{RGB}{0, 96, 112}      % deep teal
-\definecolor{accentlight}{RGB}{190, 214, 218}
-\definecolor{muted}{RGB}{110, 110, 110}
-\definecolor{ink}{RGB}{30, 30, 30}
+\definecolor{accent}{RGB}{0, 96, 112}       % deep teal
+\definecolor{accentlight}{RGB}{196, 220, 224}
+\definecolor{muted}{RGB}{115, 115, 115}
+\definecolor{ink}{RGB}{28, 28, 28}
 \color{ink}
 
 % --- Utilities -----------------------------------------------
@@ -37,7 +46,7 @@
 \usepackage{etoolbox}
 \usepackage{tabularx}
 \usepackage[
-    pdftitle={Yongseok Jang -- CV},
+    pdftitle={Yongseok Jang -- Curriculum Vitae},
     pdfauthor={Yongseok Jang},
     colorlinks=true, urlcolor=accent, linkcolor=accent
 ]{hyperref}
@@ -50,81 +59,104 @@
 \makeatletter
 \let\ps@cv\ps@plain
 \patchcmd{\ps@cv}{\thepage}{%
-    \sffamily\footnotesize\color{muted}Yongseok Jang\ \textperiodcentered\ Curriculum Vitae\ \textperiodcentered\ \thepage\,/\,\pageref*{LastPage}%
+    \sffamily\footnotesize\color{muted}%
+    \makebox[\textwidth]{%
+        Yongseok Jang \textperiodcentered\ Curriculum Vitae%
+        \hfill Last updated \today%
+        \hfill \thepage\,/\,\pageref*{LastPage}%
+    }%
 }{}{}
 \makeatother
 \pagestyle{cv}
 
 % --- Section titles ------------------------------------------
-% small sans-serif caps in accent colour, thin light rule beneath
+% accent square + upper-case sans title, light rule underneath
 \titleformat{\section}
-    {\needspace{4\baselineskip}\sffamily\bfseries\large\color{accent}}
-    {}{0pt}{\MakeUppercase{#1}}
-    [\vspace{-0.15em}{\color{accentlight}\titlerule[0.7pt]}]
-\titlespacing{\section}{0pt}{0.40cm}{0.18cm}
+    {\needspace{5\baselineskip}\sffamily\bfseries\Large\color{accent}}
+    {}{0pt}
+    {\raisebox{0.18ex}{\rule{0.55em}{0.75em}}\hspace{0.45em}\MakeUppercase{#1}}
+    [\vspace{-0.35em}{\color{accentlight}\titlerule[0.8pt]}]
+\titlespacing{\section}{0pt}{0.75cm}{0.40cm}
 
 % sub-headings inside a section
 \newcommand{\cvsubheading}[1]{%
-    \needspace{3\baselineskip}\par\vspace{0.10cm}%
-    {\sffamily\bfseries\small\color{ink!75}#1}\par\vspace{0.06cm}%
+    \needspace{3\baselineskip}\par\vspace{0.18cm}%
+    {\sffamily\bfseries\small\color{accent!85!black}#1}\par\vspace{0.12cm}%
 }
 
 % --- Entry layouts -------------------------------------------
-\newlength{\datecolwidth}
-\setlength{\datecolwidth}{2.5cm}
+% (1) Two-line entry, date flush right:
+%     \cventry{dates}{title}{institution}{location}{optional details}
+\newcommand{\cventry}[5]{%
+    \par\needspace{3\baselineskip}%
+    \begin{minipage}{\linewidth}
+        {\large\bfseries #2}\hfill{\sffamily\small\color{accent}#1}\\[0.07cm]
+        {#3}\ifblank{#4}{}{\ \ {\color{muted}\textperiodcentered\ #4}}%
+        \ifblank{#5}{}{\\[0.10cm]{\small\color{ink!80}#5}}%
+    \end{minipage}\par\vspace{0.42cm}%
+}
 
-% dated list:  \item[<date>] <text>
+% (2) Dated list for long chronological sections:
+%     \item[<date>] <text>
+\newlength{\datecolwidth}
+\setlength{\datecolwidth}{2.6cm}
 \newenvironment{cvlist}{%
     \begin{itemize}[
         leftmargin=\datecolwidth,
-        labelwidth=\datecolwidth-0.25cm,
-        labelsep=0.25cm,
+        labelwidth=\datecolwidth-0.3cm,
+        labelsep=0.3cm,
         align=left,
-        font=\sffamily\footnotesize\color{muted},
+        font=\sffamily\small\color{accent},
         topsep=0pt, partopsep=0pt, parsep=0pt,
-        itemsep=0.11cm
+        itemsep=0.20cm
     ]
 }{\end{itemize}}
 
-% numbered publication list
+% (3) Numbered publication list
 \newenvironment{publist}[1][1]{%
     \begin{enumerate}[
         start=#1,
-        label={\sffamily\footnotesize\color{accent}[\arabic*]},
+        label={\sffamily\small\color{accent}[\arabic*]},
         leftmargin=\datecolwidth,
-        labelwidth=\datecolwidth-0.25cm,
-        labelsep=0.25cm,
+        labelwidth=\datecolwidth-0.3cm,
+        labelsep=0.3cm,
         align=left,
         topsep=0pt, partopsep=0pt, parsep=0pt,
-        itemsep=0.11cm
+        itemsep=0.24cm
     ]
 }{\end{enumerate}}
+
+% (4) Two-column key/value lines (skills)
+\newcommand{\cvline}[2]{%
+    \par\begin{minipage}{\linewidth}
+        \makebox[\datecolwidth-0.3cm][l]{\sffamily\small\color{accent}#1}\hspace{0.3cm}%
+        \parbox[t]{\linewidth-\datecolwidth}{#2}%
+    \end{minipage}\par\vspace{0.22cm}%
+}
 
 \newcommand{\me}{\textbf{Y.~Jang}}
 \newcommand{\doi}[1]{\mbox{\href{https://doi.org/#1}{\sffamily\footnotesize doi:#1}}}
 \newcommand{\extlink}[2]{\href{#1}{#2\,\raisebox{.1ex}{\scriptsize\faExternalLink*}}}
-\newcommand{\role}[1]{\textbf{#1}}
-\newcommand{\where}[1]{{\color{muted}#1}}
+\newcommand{\jour}[1]{\textit{#1}}
 
 % --- Header --------------------------------------------------
 \newcommand{\cvheader}{%
-    \begin{minipage}[b]{0.60\linewidth}
-        {\sffamily\bfseries\fontsize{27}{30}\selectfont\color{accent}Yongseok Jang}\\[0.28cm]
-        {\itshape Assistant Professor of Mathematics}\\[0.05cm]
-        {\color{muted}Numerical PDEs \textperiodcentered\ Numerical linear algebra \textperiodcentered\ Scientific computing}
-    \end{minipage}%
-    \hfill
-    \begin{minipage}[b]{0.38\linewidth}
-        \raggedleft\sffamily\small
-        Department of Mathematics\\
-        Chonnam National University, Gwangju, Korea\\[0.12cm]
-        \href{mailto:yongseok.jang@jnu.ac.kr}{yongseok.jang@jnu.ac.kr}\ {\color{accent}\faEnvelope[regular]}\\
-        \href{https://sites.google.com/view/yjang}{sites.google.com/view/yjang}\ {\color{accent}\faGlobe}
-    \end{minipage}
-    \par\vspace{0.30cm}
-    {\color{accent}\rule{\linewidth}{1.4pt}}
-    \par\vspace{0.05cm}
-    {\sffamily\footnotesize\color{muted}\hfill Last updated \today}
+    {\sffamily\bfseries\fontsize{34}{36}\selectfont\color{accent}Yongseok Jang}\par
+    \vspace{0.20cm}
+    {\color{accent}\rule{2.4cm}{2.2pt}}\par
+    \vspace{0.30cm}
+    {\large\itshape Assistant Professor of Mathematics}\par
+    \vspace{0.10cm}
+    {\color{muted}Department of Mathematics, Chonnam National University, Gwangju, Republic of Korea}\par
+    \vspace{0.32cm}
+    {\sffamily\small
+        {\color{accent}\faEnvelope[regular]}\ \href{mailto:yongseok.jang@jnu.ac.kr}{yongseok.jang@jnu.ac.kr}%
+        \hspace{0.9cm}%
+        {\color{accent}\faGlobe}\ \href{https://sites.google.com/view/yjang}{sites.google.com/view/yjang}%
+    }\par
+    \vspace{0.35cm}
+    {\color{accentlight}\rule{\linewidth}{0.8pt}}\par
+    \vspace{0.05cm}
 }
 
 % ============================================================
@@ -132,25 +164,29 @@
 \cvheader
 
 % ------------------------------------------------------------
+\section{Research Interests}
+\begin{itemize}[
+    leftmargin=1.1em, itemsep=0.06cm, topsep=0pt, parsep=0pt,
+    label={\color{accent}\raisebox{0.15ex}{\rule{0.5em}{0.5em}}}
+]
+    \item Numerical methods for partial differential equations
+    \item Computational continuum mechanics and viscoelasticity
+    \item Numerical linear algebra: Krylov methods, randomization, mixed precision
+    \item Scientific and high-performance computing
+\end{itemize}
+
+% ------------------------------------------------------------
 \section{Employment}
-\begin{cvlist}
-    \item[2025 -- present] \role{Assistant Professor}, Department of Mathematics, Chonnam National University \where{Gwangju, Korea}
-    \item[2024 -- 2025] \role{Postdoctoral Research Fellow}, LIP6, Sorbonne Universit\'e \where{Paris, France}
-    \item[2021 -- 2024] \role{ONERA} (the French Aerospace Lab) \where{Ch\^atillon, France}\\
-        Research Engineer (2023--2024); Postdoctoral Researcher (2021--2023)
-    \item[2020 -- 2021] \role{Postdoctoral Researcher}, CERFACS \where{Toulouse, France}
-\end{cvlist}
+\cventry{Sep 2025 -- present}{Assistant Professor}{Department of Mathematics, Chonnam National University}{Gwangju, Korea}{}
+\cventry{Jun 2024 -- Aug 2025}{Postdoctoral Research Fellow}{LIP6, Sorbonne Universit\'e}{Paris, France}{}
+\cventry{Oct 2021 -- May 2024}{Research Engineer \& Postdoctoral Researcher}{ONERA, the French Aerospace Lab}{Ch\^atillon, France}{Postdoctoral Researcher (Oct 2021 -- Apr 2023), Research Engineer (Apr 2023 -- May 2024)}
+\cventry{Oct 2020 -- Sep 2021}{Postdoctoral Researcher}{CERFACS}{Toulouse, France}{}
 
 % ------------------------------------------------------------
 \section{Education}
-\begin{cvlist}
-    \item[2016 -- 2020] \role{PhD in Mathematics}, Brunel University London \where{UK}\\
-        Thesis: \textit{Spatially Continuous and Discontinuous Galerkin Finite Element Approximations for Dynamic Viscoelastic Problems}.
-        Supervisors: Simon Shaw and Mike Warby
-    \item[2014 -- 2015] \role{MSc in Applied Mathematics}, Imperial College London \where{UK}\\
-        Dissertation: \textit{Numerical Simulation of Growing and Collapsing Sandpiles}. Supervisor: Robert N\"urnberg
-    \item[2008 -- 2014] \role{BSc in Mathematics}, Kyung Hee University \where{Korea} --- \textit{summa cum laude}
-\end{cvlist}
+\cventry{2016 -- 2020}{PhD in Mathematics}{Brunel University London}{UK}{Thesis: \textit{Spatially Continuous and Discontinuous Galerkin Finite Element Approximations for Dynamic Viscoelastic Problems}. Supervisors: Simon Shaw and Mike Warby}
+\cventry{2014 -- 2015}{MSc in Applied Mathematics}{Imperial College London}{UK}{Dissertation: \textit{Numerical Simulation of Growing and Collapsing Sandpiles}. Supervisor: Robert N\"urnberg}
+\cventry{2008 -- 2014}{BSc in Mathematics}{Kyung Hee University}{Korea}{Graduated \textit{summa cum laude}}
 
 % ------------------------------------------------------------
 \section{Publications}
@@ -275,12 +311,11 @@
         \extlink{https://k-erc.eu/2024/04/publication/18602/}{Report}
 \end{cvlist}
 
+
 % ------------------------------------------------------------
 \section{Computational Skills}
-\begin{cvlist}
-    \item[Languages] C/C++, MATLAB, Python, Fortran
-    \item[Software] FEniCS, deal.II, Code\_Saturne, elsA, CODA, PyTorch, TensorFlow, DeepXDE, GeoGebra, \LaTeX
-    \item[HPC] MPI, OpenMP, CUDA
-\end{cvlist}
+\cvline{Languages}{C/C++, MATLAB, Python, Fortran}
+\cvline{Software}{FEniCS, deal.II, Code\_Saturne, elsA, CODA, PyTorch, TensorFlow, DeepXDE, GeoGebra, \LaTeX}
+\cvline{HPC}{MPI, OpenMP, CUDA}
 
 \end{document}
