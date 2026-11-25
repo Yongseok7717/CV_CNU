@@ -1,16 +1,18 @@
-# Compile main.tex on every push to main and publish the PDF to the
-# public repository Yongseok7717/cv as cv.pdf, which the homepage
-# (sites.google.com/view/yjang/curriculum-vitae) displays.
-#
-# One-time setup: add a fine-grained personal access token with
-# "Contents: Read and write" on Yongseok7717/cv only, as the Actions
-# secret CV_PUBLISH_TOKEN of this repository.
+# Compile main.tex on every push to main and publish the PDF as cv.pdf on
+# the `pdf` branch of this (public) repository. The homepage
+# (sites.google.com/view/yjang/curriculum-vitae) reads it from
+#   https://raw.githubusercontent.com/Yongseok7717/CV_CNU/pdf/cv.pdf
+# The `pdf` branch holds a single commit that is replaced on every build;
+# Overleaf only syncs `main`, so it never sees this branch.
 name: Build and publish CV
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 concurrency:
   group: publish-cv
@@ -33,23 +35,13 @@ jobs:
           name: cv
           path: main.pdf
 
-      - name: Publish to Yongseok7717/cv
-        env:
-          TOKEN: ${{ secrets.CV_PUBLISH_TOKEN }}
+      - name: Publish cv.pdf to the pdf branch
         run: |
-          if [ -z "$TOKEN" ]; then
-            echo "::warning::CV_PUBLISH_TOKEN is not set; PDF built but not published."
-            exit 0
-          fi
-          git clone --depth 1 "https://x-access-token:${TOKEN}@github.com/Yongseok7717/cv.git" public
-          cp main.pdf public/cv.pdf
-          cd public
-          git config user.name  "cv-publisher"
+          mkdir publish && cp main.pdf publish/cv.pdf
+          cd publish
+          git init -q -b pdf
+          git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add cv.pdf
-          if git diff --cached --quiet; then
-            echo "PDF unchanged."
-            exit 0
-          fi
-          git commit -m "Update CV from CV_CNU@${GITHUB_SHA::7}"
-          git push
+          git commit -q -m "CV built from main@${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" pdf
